@@ -53,17 +53,6 @@ struct CTRL_ANALOG_INPUTS {
 	PIL_OVERRIDE_PROBE(int16_t, Vgwu, NPCSOL_Q_IV, NPCSOL_VNPCSOL_P_REF, "V");
 };
 
-//Adding variables into PLECS
-
-struct VALUES {
-	PIL_OVERRIDE_PROBE(int16_t, in, 10, 5.0, "V");
-	PIL_OVERRIDE_PROBE(int16_t, out, 10, 5.0, "V");
-};
-
-struct VALUES my_values;
-
-//Adding ends here
-
 typedef enum
 {
 	NPCSOL_SYSTEM_FSM_STATE_POWERUP,
@@ -201,6 +190,20 @@ typedef struct CTRL_TASK2_VARS {
 	CTRL_SystemFsm_t sysFsm;
 
 } CTRL_Task2Vars_t;
+
+
+//Adding the code
+//
+//
+
+typedef struct MY_VARS{
+	PIL_READ_PROBE(uint16_t, active, 0, 1.0, "");
+	PIL_OVERRIDE_PROBE(uint16_t, enable, 0, 1.0, "");
+} MY_VARS_t;
+
+//
+//
+// Code adding ends here
 
 typedef struct CTRL_TASKB_VARS {
 	PIL_READ_PROBE(uint16_t, backgroundTaskNumber, 0, 1.0, "");
