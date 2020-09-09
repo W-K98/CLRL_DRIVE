@@ -168,20 +168,20 @@ typedef struct CTRL_TASK1_VARS {
 	PIL_READ_PROBE(uint16_t, closedLoopEnabled, 0, 1, "");
 	PIL_READ_PROBE(uint16_t, pllEnabled, 0, 1, "");
 
+    int16_t VARout_probeV;										// added by BW
+	int16_t VARout_probeF;										// added by BW
+    PIL_OVERRIDE_PROBE(float, VARin, 10, 5.0, "V"); 			// added by BW
+    PIL_READ_PROBE(float, VARout, 10, 30.0, ""); 				// added by BW
+
 	int16_t iqSetLast;
 	PIL_READ_PROBE(uint16_t, uncalibrated, 0, 1, "");
 } CTRL_Task1Vars_t;
 
+
+
 typedef struct CTRL_TASK2_VARS {
 	PIL_READ_PROBE(uint16_t, stepCtr, 0, 1.0, "");
 	PIL_READ_PROBE(uint16_t, active, 0, 1.0, "");
-//Adding the code
-//
-//
-	PIL_READ_PROBE(uint16_t, VARout, 0, 1.0, "");
-//
-//
-// Code adding ends here
 	PIL_OVERRIDE_PROBE(uint16_t, enable, 0, 1.0, "");
 	PIL_OVERRIDE_PROBE(int16_t, IdDesired, NPCSOL_Q_IV, NPCSOL_I_REF, "A");
 	PIL_OVERRIDE_PROBE(int16_t, IqDesired, NPCSOL_Q_IV, NPCSOL_I_REF, "A");
@@ -194,25 +194,10 @@ typedef struct CTRL_TASK2_VARS {
 	PIL_OVERRIDE_PROBE(uint16_t, enableClosedLoop, 0, 1, "");
 	PIL_OVERRIDE_PROBE(uint16_t, enablePll, 0, 1, "");
 
-//Adding the code
-//
-//
-	PIL_OVERRIDE_PROBE(uint16_t, VARin, 0, 1.0, "");
-//
-//
-// Code adding ends here
-
 	CTRL_SystemFsm_t sysFsm;
 
 } CTRL_Task2Vars_t;
 
-
-//Adding the code
-//
-//
-//
-//
-// Code adding ends here
 
 typedef struct CTRL_TASKB_VARS {
 	PIL_READ_PROBE(uint16_t, backgroundTaskNumber, 0, 1.0, "");
