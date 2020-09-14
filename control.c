@@ -59,6 +59,22 @@ CTRL_Obj_t Ctrl;
 #ifndef PIL_PREP_TOOL
 CTRL_Handle_t CtrlHandle;
 
+//int16_t incr = 0; //added by WK
+
+//float s_ref=0;
+//float s=0;
+
+//float diff1=0;
+//float diff1_1=0;
+//float reg_s=0;
+//float reg_s_1=0;
+//float c=0;
+
+//float diff2=0;
+//float diff2_1=0;
+//float out=0;
+//float out_1=0;
+
 static CTRL_Handle_t CTRL_init(void *aMemory, const size_t aNumBytes);
 static void CTRL_configure(CTRL_Handle_t aHandle, uint16_t aControlHz);
 #endif
@@ -407,13 +423,40 @@ void CTRL_task1(CTRL_Handle_t aHandle)
         PLX_PIDQ_reset(obj->PiDqHandle);
     }
 
-	//adding code
+		//adding code
 
-    int16_t VALUE_VARin;
-    VALUE_VARin = obj -> tsk1.VARin;
-    SET_OPROBE(obj->tsk1.VARout, VALUE_VARin + 1);
+			SET_OPROBE(obj->tsk1.s_ref, HAL_getAnalogIn(2, 2));
+			SET_OPROBE(obj->tsk1.s, HAL_getAnalogIn(3, 1));
+			SET_OPROBE(obj->tsk1.c, HAL_getAnalogIn(3, 2));
 
-	//end of adding
+			//regulator predkosci obrotwej
+
+			Calibs.diff1 = obj->tsk1.s_ref - obj->tsk1.s;
+			Calibs.reg_s = Calibs.reg_s_1+5 * Calibs.diff1 - 4.999 * Calibs.diff1_1;
+			Calibs.diff1_1 = Calibs.diff1;
+			Calibs.reg_s_1 = Calibs.reg_s;
+
+			if(Calibs.reg_s > 150) Calibs.reg_s = 150;
+			else if(Calibs.reg_s < -150) Calibs.reg_s = -150;
+
+			//regulator pradu
+
+			Calibs.diff2 = Calibs.reg_s - obj->tsk1.c;	//wyliczanie uchybu pradu
+
+			Calibs.out=Calibs.out_1+Calibs.diff2-0.9998*Calibs.diff2_1;
+			Calibs.diff2_1=Calibs.diff2;
+			Calibs.out_1=Calibs.out;
+
+			if(Calibs.out > 1) Calibs.out = 1;
+			else if(Calibs.out < -1) Calibs.out = -1;
+
+			// wyjscie - wspolczynnik wypelnienia
+
+			obj->tsk1.VARout = Calibs.out;
+			SET_OPROBE(obj->tsk1.VARout, obj->tsk1.VARout);
+
+
+		//end of adding
 
 	// digital inputs
 
